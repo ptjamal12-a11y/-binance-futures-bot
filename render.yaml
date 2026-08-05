@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: binance-futures-bot
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python -m compileall -q .
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 6 --timeout 180
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+      - key: AUTO_SCAN
+        value: "true"
+      - key: INTERVAL
+        value: "3m"
+      - key: TREND_INTERVAL
+        value: "15m"
+      - key: SCAN_EVERY_SECONDS
+        value: "60"
+      - key: MAX_SYMBOLS
+        value: "60"
+      - key: SHORTLIST_SIZE
+        value: "20"
+      - key: WORKERS
+        value: "6"
+      - key: MIN_QUOTE_VOLUME
+        value: "20000000"
+      - key: TOP_SIGNALS
+        value: "3"
+      - key: MIN_SCORE_TO_NOTIFY
+        value: "78"
+      - key: DUPLICATE_COOLDOWN_MINUTES
+        value: "45"
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
